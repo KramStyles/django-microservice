@@ -16,9 +16,21 @@ class ProjectViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Project.objects.all()
 
-    def list(self, request, *args, **kwargs):
-        publish()
-        return super().list(request, *args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        data = super().create(request, *args, **kwargs)
+        publish("product created", data.data)
+        return data
+
+    def update(self, request, *args, **kwargs):
+        data = super().update(request, *args, **kwargs)
+        publish("product updated", data.data)
+        return data
+
+    def destroy(self, request, *args, **kwargs):
+        data = super().destroy(request, *args, **kwargs)
+        publish("product deleted", kwargs["pk"])
+        return data
+
 
 
 class UserViewSet(ListModelMixin, CreateModelMixin, RetrieveModelMixin, GenericViewSet):
