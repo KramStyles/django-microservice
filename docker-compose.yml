@@ -10,3 +10,9 @@ services:
     - .:/django_microservice
     container_name: django_microservice_container
     command: django r 0.0.0.0:5000
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python consumer.py

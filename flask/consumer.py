@@ -6,7 +6,7 @@ params = pika.URLParameters(
 connection = pika.BlockingConnection(params)
 channel = connection.channel()
 
-channel.queue_declare(queue="main")
+channel.queue_declare(queue="flask")
 
 
 def callback(ch, method, properties, body):
@@ -14,7 +14,7 @@ def callback(ch, method, properties, body):
     print(body)
 
 
-channel.basic_consume(queue="admin", on_message_callback=callback)
+channel.basic_consume(queue="flask", on_message_callback=callback, auto_ack=True)
 print("Consuming started on flask")
 channel.start_consuming()
 channel.close()
