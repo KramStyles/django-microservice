@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from core.models import Project, User
+from core.producer import publish
 from core.serializers import ProductSerializer, UserSerializer
 
 
@@ -14,6 +15,10 @@ class ProjectViewSet(ModelViewSet):
     """Project ViewSet."""
     serializer_class = ProductSerializer
     queryset = Project.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        publish()
+        return super().list(request, *args, **kwargs)
 
 
 class UserViewSet(ListModelMixin, CreateModelMixin, RetrieveModelMixin, GenericViewSet):
