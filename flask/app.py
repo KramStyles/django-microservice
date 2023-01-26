@@ -7,6 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 import requests
 from sqlalchemy import UniqueConstraint
 
+from producer import publish
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sql"
 CORS(app)
@@ -18,6 +20,7 @@ migrate = Migrate(app, db)
 @dataclass
 class Product(db.Model):
     """Product Class"""
+
     id: int
     title: str
     image: str
@@ -33,7 +36,6 @@ class ProductUser(db.Model):
     user_id: int
     product_id: int
 
-    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
     product_id = db.Column(db.Integer)
@@ -44,6 +46,7 @@ class ProductUser(db.Model):
 @app.route("/")
 def home():
     return "Hello"
+
 
 @app.route("/api/products/")
 def products():
@@ -60,12 +63,11 @@ def like(id):
         productUser = ProductUser(user_id=content["id"], product_id=id)
         db.session.add(productUser)
         db.session.commit()
+        publish("product_liked", id)
     except Exception as err:
         abort(400, err)
 
-    return jsonify({
-        "message": "success"
-    })
+    return jsonify({"message": "success"})
 
 
 if __name__ == "__main__":
