@@ -1,12 +1,15 @@
 import json
+import os
 
+# from decouple import config
 import pika
 
 from app import Product, db, app
 
-params = pika.URLParameters(
-    "amqps://yyixeqjd:ShEneQHotFeYrXpwh0ilhq9AaChezU8g@kangaroo.rmq.cloudamqp.com/yyixeqjd"
-)
+AMPQ_URL = os.environ.get("AMPQ_URL")
+# AMPQ_URL = config("AMPQ_URL")
+
+params = pika.URLParameters(AMPQ_URL)
 connection = pika.BlockingConnection(params)
 channel = connection.channel()
 
