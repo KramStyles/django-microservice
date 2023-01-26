@@ -12,9 +12,7 @@ settings.configure()
 django.setup()
 from core.models import Project
 
-params = pika.URLParameters(
-    "amqps://yyixeqjd:ShEneQHotFeYrXpwh0ilhq9AaChezU8g@kangaroo.rmq.cloudamqp.com/yyixeqjd"
-)
+params = pika.URLParameters(settings.AMPQ_URL)
 connection = pika.BlockingConnection(params)
 channel = connection.channel()
 
